@@ -28,5 +28,13 @@ def get_user_filter(id: int, db: Session = Depends(get_db)):
 
 
 # Update user
+@router.patch('/{id}/update')
+def update_user(id: int, request: UserBase,
+                db: Session = Depends(get_db)):
+    return db_user.update_user(db, id, request)
+
 
 # Delete user
+@router.delete('/{id}/delete')
+def delete_user(id: int, db: Session = Depends(get_db)):
+    return db_user.delete_user(db, id)
