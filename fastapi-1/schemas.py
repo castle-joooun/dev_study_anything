@@ -1,5 +1,5 @@
-from pydantic.main import BaseModel
 from typing import List
+from pydantic import BaseModel
 
 
 # Article inside UserDisplay
@@ -8,7 +8,7 @@ class Article(BaseModel):
     content: str
     published: bool
 
-    class Config:
+    class Config():
         orm_mode = True
 
 
@@ -23,7 +23,7 @@ class UserDisplay(BaseModel):
     email: str
     items: List[Article] = []
 
-    class Config:
+    class Config():
         orm_mode = True
 
 
@@ -31,8 +31,8 @@ class UserDisplay(BaseModel):
 class User(BaseModel):
     id: int
     username: str
-    
-    class Config:
+
+    class Config():
         orm_mode = True
 
 
@@ -49,5 +49,5 @@ class ArticleDisplay(BaseModel):
     published: bool
     user: User
 
-    class Config:
+    class Config():
         orm_mode = True

@@ -1,8 +1,7 @@
+from db.hash import Hash
 from sqlalchemy.orm.session import Session
-
 from schemas import UserBase
 from db.models import DbUser
-from db.hash import Hash
 
 
 def create_user(db: Session, request: UserBase):
@@ -11,7 +10,6 @@ def create_user(db: Session, request: UserBase):
         email=request.email,
         password=Hash.bcrypt(request.password)
     )
-
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -34,7 +32,6 @@ def update_user(db: Session, id: int, request: UserBase):
         DbUser.password: Hash.bcrypt(request.password)
     })
     db.commit()
-
     return 'ok'
 
 
@@ -42,5 +39,4 @@ def delete_user(db: Session, id: int):
     user = db.query(DbUser).filter(DbUser.id == id).first()
     db.delete(user)
     db.commit()
-
     return 'ok'
