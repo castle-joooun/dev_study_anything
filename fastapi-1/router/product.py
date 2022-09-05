@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from fastapi.responses import Response, HTMLResponse, PlainTextResponse
 from sqlalchemy.orm.session import Session
-from typing import List
+from typing import List, Optional
 
 from db import db_article
 from db.database import get_db
@@ -10,6 +10,16 @@ from schemas import ArticleBase, ArticleDisplay
 router = APIRouter()
 
 products = ['watch', 'camera', 'phone']
+
+
+@router.get('/withheader')
+def get_products(
+        response: Response,
+        custom_header: Optional[List[str]] = Header()
+):
+    response.headers['custom_response_header'] = \
+        ' and '.join(custom_header)
+    return products
 
 
 @router.get('/all')
@@ -40,7 +50,8 @@ def get_all_products():
 def get_product(id: int):
     if id > len(products):
         out = 'Product not available'
-        return PlainTextResponse(status_code=404, content=out, media_type='text/plain')
+        return PlainTextResponse(status_code=404, content=out,
+                                 media_type='text/plain')
     else:
         product = products[id]
         out = f'''
