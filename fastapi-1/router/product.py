@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Header, Cookie
+from fastapi import APIRouter, Depends, Header, Cookie, Form
 from fastapi.responses import Response, HTMLResponse, PlainTextResponse
 from sqlalchemy.orm.session import Session
 from typing import List, Optional
@@ -10,6 +10,12 @@ from schemas import ArticleBase, ArticleDisplay
 router = APIRouter()
 
 products = ['watch', 'camera', 'phone']
+
+
+@router.post('/new')
+def create_product(name: str = Form(...)):
+    products.append(name)
+    return products
 
 
 @router.get('/withheader')
