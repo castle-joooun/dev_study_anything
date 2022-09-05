@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, Cookie
 from fastapi.responses import Response, HTMLResponse, PlainTextResponse
 from sqlalchemy.orm.session import Session
 from typing import List, Optional
@@ -15,18 +15,25 @@ products = ['watch', 'camera', 'phone']
 @router.get('/withheader')
 def get_products(
         response: Response,
-        custom_header: Optional[List[str]] = Header()
+        custom_header: Optional[List[str]] = Header(),
+        test_cookie: Optional[str] = Cookie(None)
 ):
     response.headers['custom_response_header'] = \
         ' and '.join(custom_header)
-    return products
+    return {
+        'data': products,
+        'custom_header': custom_header,
+        'test_cookie': test_cookie
+    }
 
 
 @router.get('/all')
 def get_all_products():
     # return products
     data = ' '.join(products)
-    return Response(content=data, media_type='text/plain')
+    response = Response(content=data, media_type='text/plain')
+    response.set_cookie(key='test_cookie', value='test_cookie_value')
+    return response
 
 
 @router.get('/{id}', responses={
