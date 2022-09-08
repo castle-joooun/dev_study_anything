@@ -5,6 +5,7 @@ from typing import List
 from db import db_user
 from db.database import get_db
 from schemas import UserBase, UserDisplay
+from auth.oauth2 import get_current_user
 
 router = APIRouter()
 
@@ -17,24 +18,28 @@ def create_user(request: UserBase, db: Session = Depends(get_db)):
 
 # Read all users
 @router.get('/all', response_model=List[UserDisplay])
-def get_all_users(db: Session = Depends(get_db)):
+def get_all_users(db: Session = Depends(get_db),
+                  current_user: UserBase = Depends(get_current_user)):
     return db_user.get_all_users(db)
 
 
 # Read one user
 @router.get('/{id}', response_model=UserDisplay)
-def get_user_filter(id: int, db: Session = Depends(get_db)):
+def get_user_filter(id: int, db: Session = Depends(get_db),
+                    current_user: UserBase = Depends(get_current_user)):
     return db_user.get_user(db, id)
 
 
 # Update user
 @router.patch('/{id}/update')
 def update_user(id: int, request: UserBase,
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db),
+                current_user: UserBase = Depends(get_current_user)):
     return db_user.update_user(db, id, request)
 
 
 # Delete user
 @router.delete('/{id}/delete')
-def delete_user(id: int, db: Session = Depends(get_db)):
+def delete_user(id: int, db: Session = Depends(get_db),
+                current_user: UserBase = Depends(get_current_user)):
     return db_user.delete_user(db, id)
