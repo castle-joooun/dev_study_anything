@@ -1,7 +1,8 @@
 import time
 
 from client import html
-from fastapi import FastAPI, status, Response, Request, HTTPException
+from fastapi import FastAPI, status, Response, Request, HTTPException, \
+    Depends
 from fastapi.responses import JSONResponse, PlainTextResponse, \
     HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,14 +10,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.websockets import WebSocket
 import uvicorn
 
-from router import blog_get, blog_post, user, article, product, file
+from router import blog_get, blog_post, user, article, product, file, \
+    dependencies
 from db import models
 from db.database import engine
 from exception import StoryException
 from auth import authentication
 from templates import templates
+from custom_log import log
 
 app = FastAPI()
+app.include_router(dependencies.router, prefix='/dependencies',
+                   tags=['dependencies'],
+                   dependencies=[Depends(log)])
 app.include_router(blog_get.router, tags=['blog'])
 app.include_router(blog_post.router, prefix='/blog', tags=['blog'])
 app.include_router(user.router, prefix='/user', tags=['user'])
@@ -57,8 +63,6 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         for client in clients:
             await client.send_text(data)
-
-
 
 
 # @app.exception_handler(HTTPException)

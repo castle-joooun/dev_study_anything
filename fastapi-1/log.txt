@@ -1,1 +1,7 @@
 MyAPI: Template read for product with id 1
+MyApp: 
+	http://localhost:8000/dependencies?separator=%21%21%21&tag=MyApp
+MyApp: no message
+	http://localhost:8000/dependencies?separator=~~~&tag=MyApp&message=no%20message
+MyApp: no message
+	http://localhost:8000/dependencies/new?tag=MyApp&message=no%20message&separator=asd
