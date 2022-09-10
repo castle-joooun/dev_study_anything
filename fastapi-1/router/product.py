@@ -6,6 +6,7 @@ from typing import List, Optional
 from db import db_article
 from db.database import get_db
 from schemas import ArticleBase, ArticleDisplay
+from custom_log import log
 
 router = APIRouter()
 
@@ -35,6 +36,7 @@ def get_products(
 
 @router.get('/all')
 def get_all_products():
+    log('MyAPI', 'Call to get all')
     # return products
     data = ' '.join(products)
     response = Response(content=data, media_type='text/plain')
