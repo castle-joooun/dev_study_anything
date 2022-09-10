@@ -1,1 +1,1 @@
-MyAPI: Call to get all
+MyAPI: Template read for product with id 1
