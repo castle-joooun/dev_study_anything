@@ -9,6 +9,7 @@ from db import models
 from db.database import engine
 from exception import StoryException
 from auth import authentication
+from templates import templates
 
 app = FastAPI()
 app.include_router(blog_get.router, tags=['blog'])
@@ -18,6 +19,8 @@ app.include_router(article.router, prefix='/article', tags=['article'])
 app.include_router(product.router, prefix='/product', tags=['product'])
 app.include_router(authentication.router, tags=['authentication'])
 app.include_router(file.router, prefix='/file', tags=['file'])
+app.include_router(templates.router, prefix='/templates',
+                   tags=['templates'])
 
 
 @app.get('/')
@@ -53,7 +56,10 @@ app.add_middleware(
 )
 
 app.mount('/files', StaticFiles(directory='files'), name='files')
-
+app.mount('/templates/static',
+          StaticFiles(directory='templates/static'),
+          name='static'
+          )
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

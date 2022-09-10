@@ -1,3 +1,5 @@
+import time
+
 from fastapi import APIRouter, Depends, Header, Cookie, Form
 from fastapi.responses import Response, HTMLResponse, PlainTextResponse
 from sqlalchemy.orm.session import Session
@@ -11,6 +13,11 @@ from custom_log import log
 router = APIRouter()
 
 products = ['watch', 'camera', 'phone']
+
+
+async def time_consuming_functionality():
+    time.sleep(5)
+    return 'ok'
 
 
 @router.post('/new')
@@ -35,8 +42,9 @@ def get_products(
 
 
 @router.get('/all')
-def get_all_products():
-    log('MyAPI', 'Call to get all')
+async def get_all_products():
+    # log('MyAPI', 'Call to get all')
+    await time_consuming_functionality()
     # return products
     data = ' '.join(products)
     response = Response(content=data, media_type='text/plain')
