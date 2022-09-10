@@ -1,3 +1,5 @@
+import time
+
 from fastapi import FastAPI, status, Response, Request, HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,6 +44,16 @@ def story_exception_handler(request: Request, exc: StoryException):
 
 
 models.Base.metadata.create_all(engine)
+
+
+@app.middleware('http')
+async def add_middleware(request: Request, class_next):
+    start_time = time.time()
+    response = await class_next(request)
+    duration = time.time() - start_time
+    response.headers['duration'] = str(duration)
+    return response
+
 
 origins = {
     'https://localhost:3000'
