@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm.session import Session
@@ -25,3 +27,7 @@ def create(request: PostBase, db: Session = Depends(get_db)):
 
     return db_post.create(db, request)
 
+
+@router.get('/all', response_model=List[PostDisplay])
+def posts(db: Session = Depends(get_db)):
+    return db_post.get_all(db)
